@@ -1,0 +1,246 @@
+#N canvas 0 80 1280 720 10;
+#X obj 32 339 dac~;
+#X obj 27 52 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X msg 73 97 \; pd dsp 1;
+#X obj 27 302 readsf~ 2;
+#X text 247 464 Suas implementações vão;
+#N canvas 0 50 450 300 (subpatch) 0;
+#X array RMS 200 float 1;
+#A 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;
+#X coords 0 1 199 0 200 140 1 0 0;
+#X restore 612 215 graph;
+#N canvas 640 80 640 720 (subpatch) 0;
+#X array PEAK 200 float 1;
+#A 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;
+#X coords 0 1 199 0 200 140 1 0 0;
+#X restore 612 377 graph;
+#X obj 27 245 openpanel;
+#X msg 27 275 open \$1 \, 1;
+#N canvas 640 80 640 720 plota_estimativas_e_erros 0;
+#X obj 57 437 inlet;
+#X obj 194 489 inlet;
+#X obj 363 541 inlet;
+#X obj 63 319 f 0;
+#X obj 92 489 tabwrite ZCR;
+#X obj 63 363 + 1;
+#X obj 63 385 moses 200;
+#X msg 123 411 0;
+#X obj 63 294 bang~;
+#X text 207 318 indice nos graficos (contador);
+#X text 207 386 zera o contador quando chegar ao final da tabela;
+#X text 208 295 dispara a computacao a cada bloco;
+#X text 208 363 no final \, incrementa contador;
+#X obj 58 69 cnv 15 500 200 empty empty Plota_estimativas_e_erros:
+5 12 0 14 -4032 -66577 0;
+#X text 96 120 Recebe as estimativas computadas pela sua implementacao
+\, e tambem os valores obtidos por funcoes prontas de bibliotecas \,
+a fim de mensurar as discrepancias entre as implementacoes. Note que
+no caso da FFT sao esperadas discrepancias de ate' 1 bin (resolucao
+da analise) \, o que nao e' considerado erro da implementacao \, mas
+sim imprecisao da estimativa.;
+#X text 96 230 inlets: 2 estimativas de cada tecnica (ZCR \, F0-ACF
+e F0-FFT);
+#X obj 75 461 inlet;
+#X obj 57 485 -;
+#X obj 57 513 tabwrite ZCR-diff;
+#X obj 212 513 inlet;
+#X obj 194 537 -;
+#X obj 381 563 inlet;
+#X obj 363 588 -;
+#X obj 63 341 t f f;
+#X obj 95 363 s index-\$0;
+#X obj 193 461 r index-\$0;
+#X obj 331 513 r index-\$0;
+#X obj 500 564 r index-\$0;
+#X text 208 342 envia o indice para os tabwrites;
+#X obj 229 541 tabwrite RMS;
+#X obj 194 563 tabwrite RMS-diff;
+#X obj 398 591 tabwrite PEAK;
+#X obj 363 614 tabwrite PEAK-diff;
+#X connect 0 0 17 0;
+#X connect 0 0 4 0;
+#X connect 1 0 20 0;
+#X connect 1 0 29 0;
+#X connect 2 0 22 0;
+#X connect 2 0 31 0;
+#X connect 3 0 23 0;
+#X connect 5 0 6 0;
+#X connect 6 0 3 1;
+#X connect 6 1 7 0;
+#X connect 7 0 3 1;
+#X connect 8 0 3 0;
+#X connect 16 0 17 1;
+#X connect 17 0 18 0;
+#X connect 19 0 20 1;
+#X connect 20 0 30 0;
+#X connect 21 0 22 1;
+#X connect 22 0 32 0;
+#X connect 23 0 5 0;
+#X connect 23 1 24 0;
+#X connect 25 0 4 1;
+#X connect 25 0 18 1;
+#X connect 26 0 29 1;
+#X connect 26 0 30 1;
+#X connect 27 0 31 1;
+#X connect 27 0 32 1;
+#X restore 27 568 pd plota_estimativas_e_erros;
+#N canvas 0 50 450 300 (subpatch) 0;
+#X array ZCR-diff 200 float 1;
+#A 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;
+#X coords 0 10 199 -10 200 140 1 0 0;
+#X restore 830 53 graph;
+#N canvas 0 50 450 300 (subpatch) 0;
+#X array RMS-diff 200 float 1;
+#A 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;
+#X coords 0 1 199 -1 200 140 1 0 0;
+#X restore 830 215 graph;
+#N canvas 0 50 450 300 (subpatch) 0;
+#X array PEAK-diff 200 float 1;
+#A 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;
+#X coords 0 1 199 -1 200 140 1 0 0;
+#X restore 830 377 graph;
+#N canvas 0 50 450 300 (subpatch) 0;
+#X array ZCR 200 float 1;
+#A 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;
+#X coords 0 64 199 0 200 140 1 0 0;
+#X restore 612 53 graph;
+#X obj 27 76 t b b b;
+#N canvas 640 80 640 720 zero-crossing-rate 0;
+#X obj 81 65 inlet~;
+#X obj 81 239 outlet;
+#X text 129 66 <- Aqui você recebe o sinal de entrada.;
+#X text 132 240 <- Aqui você devolve os valores de ZCR.;
+#X msg 81 212 0;
+#X obj 81 161 bang~;
+#X text 130 162 <- Aqui você computa os valores de ZCR.;
+#X text 445 87 implementacao de referencia:;
+#X obj 448 239 outlet;
+#X obj 448 104 cyclone/zerox~;
+#X obj 448 208 snapshot~;
+#X text 446 272 muda tamanho do bloco;
+#X obj 448 360 block~;
+#X msg 448 327 set \$1;
+#X obj 448 295 r tamanho_bloco;
+#X connect 0 0 9 0;
+#X connect 4 0 1 0;
+#X connect 5 0 4 0;
+#X connect 5 0 10 0;
+#X connect 9 0 10 0;
+#X connect 10 0 8 0;
+#X connect 13 0 12 0;
+#X connect 14 0 13 0;
+#X restore 27 457 pd zero-crossing-rate;
+#N canvas 640 80 640 720 root-mean-square 0;
+#X obj 81 79 inlet~;
+#X obj 81 215 outlet;
+#X text 129 80 <- Aqui você recebe o sinal de entrada.;
+#X msg 81 188 0;
+#X obj 81 161 bang~;
+#X text 448 100 implementacao de referencia:;
+#X obj 448 211 outlet;
+#X obj 448 125 zexy/envrms~;
+#X text 130 162 <- Aqui você computa os valores de RMS.;
+#X text 132 215 <- Aqui você devolve os valores de RMS.;
+#X text 446 272 muda tamanho do bloco;
+#X obj 448 360 block~;
+#X msg 448 327 set \$1;
+#X obj 448 295 r tamanho_bloco;
+#X connect 0 0 7 0;
+#X connect 3 0 1 0;
+#X connect 4 0 3 0;
+#X connect 7 0 6 0;
+#X connect 12 0 11 0;
+#X connect 13 0 12 0;
+#X restore 104 490 pd root-mean-square;
+#X msg 50 137 \; ZCR const 0 \; RMS const 0 \; PEAK const 0 \; ZCR-diff
+const 0 \; RMS-diff const 0 \; PEAK-diff const 0 \;;
+#X text 140 101 1 Começa a computar áudio.;
+#X text 53 50 0 Clique aqui para dar início à execução.;
+#X text 109 245 3 Seleciona arquivo de entrada.;
+#X text 118 276 4 Abre arquivo e começa a tocar.;
+#X text 247 480 dentro destes 3 sub-patches.;
+#N canvas 640 80 640 720 peak-amplitude 0;
+#X obj 81 79 inlet~;
+#X obj 81 215 outlet;
+#X text 129 80 <- Aqui você recebe o sinal de entrada.;
+#X msg 81 188 0;
+#X obj 81 161 bang~;
+#X text 449 157 implementacao de referencia:;
+#X obj 450 210 outlet;
+#X obj 450 179 cyclone/peakamp~;
+#X text 130 162 <- Aqui você computa os valores de PEAK.;
+#X text 132 215 <- Aqui você devolve os valores de PEAK.;
+#X text 446 272 muda tamanho do bloco;
+#X obj 448 360 block~;
+#X msg 448 327 set \$1;
+#X obj 448 295 r tamanho_bloco;
+#X connect 0 0 7 0;
+#X connect 3 0 1 0;
+#X connect 4 0 3 0;
+#X connect 4 0 7 0;
+#X connect 7 0 6 0;
+#X connect 12 0 11 0;
+#X connect 13 0 12 0;
+#X restore 181 519 pd peak-amplitude;
+#X obj 391 88 vradio 15 1 0 6 empty empty empty 0 -8 0 10 -262144 -1
+-1 0;
+#X text 410 87 64;
+#X text 410 103 128;
+#X text 410 118 256;
+#X text 410 133 512;
+#X text 411 148 1024;
+#X text 411 163 2048;
+#X obj 391 206 s tamanho_bloco;
+#X text 391 49 Define o tamanho do bloco de analise.;
+#X text 192 144 2 Inicializa gráficos.;
+#X obj 391 183 expr pow(2 \, $f1) * 64;
+#X connect 1 0 14 0;
+#X connect 3 0 0 0;
+#X connect 3 0 15 0;
+#X connect 3 0 16 0;
+#X connect 3 0 23 0;
+#X connect 3 1 0 1;
+#X connect 7 0 8 0;
+#X connect 8 0 3 0;
+#X connect 14 0 7 0;
+#X connect 14 1 17 0;
+#X connect 14 2 2 0;
+#X connect 15 0 9 0;
+#X connect 15 1 9 1;
+#X connect 16 0 9 2;
+#X connect 16 1 9 3;
+#X connect 23 0 9 4;
+#X connect 23 1 9 5;
+#X connect 24 0 34 0;
+#X connect 34 0 31 0;
